@@ -74,27 +74,6 @@ ssh -L 3001:localhost:3001 \
 - **Prometheus**: http://localhost:9090
 - **Jaeger**: http://localhost:16686
 
-## 설정 커스터마이징
-
-### OpenTelemetry 샘플링 비율 조정
-```yaml
-environment:
-  - OTEL_TRACES_SAMPLER_ARG=0.1  # 10% 샘플링
-```
-
-### 메트릭 수집 간격 조정
-```yaml
-# prometheus.yaml
-global:
-  scrape_interval: 30s  # 기본 15s에서 변경
-```
-
-### 로그 보존 기간 설정
-```yaml
-# loki-config.yaml의 limits_config에 추가
-retention_period: 168h  # 7일
-```
-
 ## 성능 최적화
 
 ### 리소스 사용량 최적화
@@ -111,6 +90,7 @@ retention_period: 168h  # 7일
 1. **환경변수**: 민감한 정보를 `.env` 파일로 분리
 2. **네트워크**: 모니터링 포트 접근 제한
 3. **인증**: Grafana 기본 비밀번호 변경
+4. **FastAPI**: FastAPI 에플리케이션도 OpenTelemetry 적용을 위한 패키지 적용
 
 ## 참고 자료
 
