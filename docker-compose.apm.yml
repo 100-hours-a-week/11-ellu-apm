@@ -66,6 +66,8 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=grafana-pyroscope-app,grafana-exploretraces-app,grafana-metricsdrilldown-app,grafana-lokiexplore-app
+
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
