@@ -1,0 +1,72 @@
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+
+dashboards:
+  # Node Exporter Full
+  - dashboard:
+      id: 1860  
+      revision: 1
+    datasource: Prometheus
+
+  # Docker Container & Host Metrics  
+  - dashboard:
+      id: 14282  
+      revision: 1
+    datasource: Prometheus
+
+  # OpenTelemetry APM
+  - dashboard:
+      id: 19419  
+      revision: 1
+    datasource: Prometheus
+
+  # Spring Boot Statistics
+  - dashboard:
+      id: 12900  
+      revision: 1
+    datasource: Prometheus
+
+    # Logging (Loki)
+    # Logs App
+  - dashboard:
+      id: 13639  
+      revision: 1
+    datasource: Loki
+    # Loki Dashboard quick search
+  - dashboard:
+      id: 12019  
+      revision: 1
+    datasource: Loki
+  # Loki & Promtail
+  - dashboard:
+      id: 14055  
+      revision: 1
+    datasource: Prometheus
+  
+  # Tracing (Jaeger)
+  # Jaeger Overview
+  - dashboard:
+      id: 10001  
+      revision: 1
+    datasource: Jaeger
+    # Jaeger Tracing
+  - dashboard:
+      id: 11449  
+      revision: 1
+    datasource: Jaeger
+  
+  # System Monitoring
+  # Prometheus 2.0 Stats
+  - dashboard:
+      id: 3662   
+      revision: 1
+    datasource: Prometheus
