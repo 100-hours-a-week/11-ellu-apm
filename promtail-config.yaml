@@ -56,11 +56,11 @@ scrape_configs:
           service: backend
           __path__: /var/log/looper/backend*.log
 
-  # - job_name: looper-ai
-  #   static_configs:
-  #     - targets:
-  #         - localhost
-  #       labels:
-  #         job: looper-ai
-  #         service: ai
-  #         __path__: /var/log/looper/ai*.log
+  - job_name: looper-ai
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: looper-ai
+          service: ai
+          __path__: /var/log/looper/ai*.log
