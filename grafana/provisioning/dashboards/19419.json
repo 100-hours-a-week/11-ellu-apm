@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 11,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -162,7 +162,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", span_kind=\"SPAN_KIND_SERVER\", http_status_code=~\"^2.*\", http_route=~\"$route\"}) by(http_status_code)",
+          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", span_kind=\"SPAN_KIND_SERVER\", http_response_status_code=~\"^2.*\", http_route=~\"$route\"}) by(http_response_status_code)",
           "format": "time_series",
           "instant": true,
           "legendFormat": "Http Status 2XX",
@@ -176,7 +176,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", span_kind=\"SPAN_KIND_SERVER\", http_status_code=~\"^3.*\", http_route=~\"$route\"}) by(http_status_code)",
+          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", span_kind=\"SPAN_KIND_SERVER\", http_response_status_code=~\"^3.*\", http_route=~\"$route\"}) by(http_response_status_code)",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -191,7 +191,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", span_kind=\"SPAN_KIND_SERVER\", http_status_code=~\"^4.*\", http_route=~\"$route\"}) by(http_status_code)",
+          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", span_kind=\"SPAN_KIND_SERVER\", http_response_status_code=~\"^4.*\", http_route=~\"$route\"}) by(http_response_status_code)",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -206,7 +206,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", span_kind=\"SPAN_KIND_SERVER\", http_status_code=~\"^5.*\", http_route=~\"$route\"}) by(http_status_code)",
+          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", span_kind=\"SPAN_KIND_SERVER\", http_response_status_code=~\"^5.*\", http_route=~\"$route\"}) by(http_response_status_code)",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -515,7 +515,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(traces_span_metrics_duration_milliseconds_count{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_status_code=~\"5.*|\", http_route=~\"$route\"})/sum(traces_span_metrics_duration_milliseconds_count{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_route=~\"$route\"})",
+          "expr": "sum(traces_span_metrics_duration_milliseconds_count{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_response_status_code=~\"5.*|\", http_route=~\"$route\"})/sum(traces_span_metrics_duration_milliseconds_count{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_route=~\"$route\"})",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -791,9 +791,9 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sort_desc(traces_span_metrics_duration_milliseconds_sum{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_status_code!=\"\", http_route=~\"$route\"} / traces_span_metrics_duration_milliseconds_count{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_status_code!=\"\", http_route=~\"$route\"})",
+          "expr": "sort_desc(traces_span_metrics_duration_milliseconds_sum{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_response_status_code!=\"\", http_route=~\"$route\"} / traces_span_metrics_duration_milliseconds_count{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_response_status_code!=\"\", http_route=~\"$route\"})",
           "instant": true,
-          "legendFormat": "[{{http_status_code}}] {{span_name}}",
+          "legendFormat": "[{{http_response_status_code}}] {{span_name}}",
           "range": false,
           "refId": "A"
         }
@@ -929,7 +929,12 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": []
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Error Rate"
+          }
+        ]
       },
       "pluginVersion": "12.0.1",
       "targets": [
@@ -940,7 +945,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(rate(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", http_route=~\"$route\", span_kind=\"SPAN_KIND_SERVER\"}[3m])*60) by(service_name, http_method, http_route)",
+          "expr": "sum(rate(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", http_route=~\"$route\", span_kind=\"SPAN_KIND_SERVER\"}[3m])*60) by(service_name, http_request_method, http_route)",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -953,7 +958,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, sum(rate(traces_span_metrics_duration_milliseconds_bucket{service_name=\"$app\", http_route=~\"$route\", span_kind=\"SPAN_KIND_SERVER\"}[3m])) by (le, service_name, http_method, http_route))",
+          "expr": "histogram_quantile(0.95, sum(rate(traces_span_metrics_duration_milliseconds_bucket{service_name=\"$app\", http_route=~\"$route\", span_kind=\"SPAN_KIND_SERVER\"}[3m])) by (le, service_name, http_request_method, http_route))",
           "hide": false,
           "instant": false,
           "range": true,
@@ -966,7 +971,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", http_route=~\"$route\", span_kind=\"SPAN_KIND_SERVER\", http_status_code!~\"2.*|3.*\"}) by(service_name, http_method, http_route) / sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", http_route=~\"$route\", span_kind=\"SPAN_KIND_SERVER\"}) by(service_name, http_method, http_route)",
+          "expr": "sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", http_route=~\"$route\", span_kind=\"SPAN_KIND_SERVER\", http_response_status_code!~\"2.*|3.*\"}) by(service_name, http_request_method, http_route) / sum(traces_span_metrics_duration_milliseconds_count{service_name=\"$app\", http_route=~\"$route\", span_kind=\"SPAN_KIND_SERVER\"}) by(service_name, http_request_method, http_route)",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -997,9 +1002,9 @@
               "Trend #Request Rate Trend": 5,
               "Value #PR95": 8,
               "Value #Request Rate": 6,
-              "http_method": 3,
+              "http_request_method": 3,
               "http_route": 2,
-              "http_status_code": 4,
+              "http_response_status_code": 4,
               "service_name": 1
             },
             "renameByName": {
@@ -1015,9 +1020,9 @@
               "Value #Error Rate": "Error Rate",
               "Value #PR95": "PR95 Latency",
               "Value #Request Rate": "Request Rate",
-              "http_method": "Method",
+              "http_request_method": "Method",
               "http_route": "Route",
-              "http_status_code": "Status Code",
+              "http_response_status_code": "Status Code",
               "service_name": "Application"
             }
           }
