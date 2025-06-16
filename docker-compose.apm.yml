@@ -67,6 +67,8 @@ services:
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=false
       - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=grafana-pyroscope-app,grafana-exploretraces-app,grafana-metricsdrilldown-app,grafana-lokiexplore-app
+      - GF_SERVER_DOMAIN=looper.my
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
 
     volumes:
       - grafana_data:/var/lib/grafana
