@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -71,7 +71,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -153,7 +153,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -300,7 +300,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -374,7 +374,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -439,7 +439,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -507,7 +507,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -605,7 +605,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -705,7 +705,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -782,7 +782,7 @@
         "sizing": "auto",
         "valueMode": "color"
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -791,7 +791,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sort_desc(traces_span_metrics_duration_milliseconds_sum{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_response_status_code!=\"\", http_route=~\"$route\"} / traces_span_metrics_duration_milliseconds_count{span_kind=\"SPAN_KIND_SERVER\", service_name=\"$app\", http_response_status_code!=\"\", http_route=~\"$route\"})",
+          "expr": "sort_desc(\n  sum by (span_name, http_response_status_code) (\n    traces_span_metrics_duration_milliseconds_sum{\n      span_kind=\"SPAN_KIND_SERVER\", \n      service_name=\"$app\", \n      http_response_status_code!=\"\", \n      http_route=~\"$route\"\n    }\n  ) / \n  sum by (span_name, http_response_status_code) (\n    traces_span_metrics_duration_milliseconds_count{\n      span_kind=\"SPAN_KIND_SERVER\", \n      service_name=\"$app\", \n      http_response_status_code!=\"\", \n      http_route=~\"$route\"\n    }\n  )\n)",
           "instant": true,
           "legendFormat": "[{{http_response_status_code}}] {{span_name}}",
           "range": false,
@@ -936,7 +936,7 @@
           }
         ]
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -1003,8 +1003,8 @@
               "Value #PR95": 8,
               "Value #Request Rate": 6,
               "http_request_method": 3,
-              "http_route": 2,
               "http_response_status_code": 4,
+              "http_route": 2,
               "service_name": 1
             },
             "renameByName": {
@@ -1021,8 +1021,8 @@
               "Value #PR95": "PR95 Latency",
               "Value #Request Rate": "Request Rate",
               "http_request_method": "Method",
-              "http_route": "Route",
               "http_response_status_code": "Status Code",
+              "http_route": "Route",
               "service_name": "Application"
             }
           }
