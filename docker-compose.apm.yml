@@ -10,7 +10,7 @@ services:
       - "8888:8888"   
       - "8889:8889"   # Prometheus exporter metrics
       - "13133:13133" # health_check extension
-      - "4317:4317"   # OTLP gRPC receiver
+      - "4317:4317"   # OTLP gRPC receiver (사용 x)
       - "4318:4318"   # OTLP HTTP receiver
       - "55679:55679" # zpages extension
     depends_on:
@@ -146,6 +146,21 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: always
+    networks:
+      - looper-network
+
+  tempo: 
+    image: grafana/tempo:latest
+    container_name: tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo-config.yaml:/etc/tempo.yaml
+      - tempo_data:/var/tempo
+    ports:
+      - "3200:3200"   # temoo 서버
+      - "4318"        # otlp http
+      - "4317"        # otlp grpc
     restart: always
     networks:
       - looper-network

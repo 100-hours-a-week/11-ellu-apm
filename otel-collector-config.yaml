@@ -21,6 +21,39 @@ processors:
       - key: service.namespace
         value: looper
         action: upsert
+  
+  attributes/database:
+    actions:
+      - key: db.environment
+        value: production
+        action: insert
+      - key: db.monitoring.enabled
+        value: "true"
+        action: insert
+  
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 50000
+    expected_new_traces_per_sec: 10
+    policies:
+      - name: slow-database-queries
+        type: latency
+        latency:
+          threshold_ms: 1000
+        attributes:
+          - key: db.system
+            values: ["postgresql", "mysql"]
+      - name: database-errors
+        type: status_code
+        status_code:
+          status_codes: [ERROR]
+        attributes:
+          - key: db.system
+            values: ["postgresql", "mysql"]
+      - name: default-sampling
+        type: probabilistic
+        probabilistic:
+          sampling_percentage: 10
 
 connectors:
   spanmetrics:
@@ -32,19 +65,35 @@ connectors:
       - name: url.path
       - name: db.operation      
       - name: db.name          
-      - name: db.sql.table 
+      - name: db.sql.table
+      - name: db.system
     histogram:
       explicit:
         buckets: [100us, 1ms, 2ms, 6ms, 10ms, 100ms, 250ms, 500ms, 1000ms, 1400ms, 2000ms, 5s, 10s, 30s]
+    exemplars:
+      enabled: true
 
 exporters:
-  otlp:
+  otlp/tempo:
+    endpoint: http://tempo:4317
+    tls:
+      insecure: true
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+  
+  otlp/jaeger:
     endpoint: http://jaeger:4317
     tls:
       insecure: true
   
   prometheus:
     endpoint: "0.0.0.0:8889"
+    enable_open_metrics: true
+    resource_to_telemetry_conversion:
+      enabled: true
     
   loki:
     endpoint: http://loki:3100/loki/api/v1/push
@@ -62,8 +111,8 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [memory_limiter, resource, batch]
-      exporters: [spanmetrics, otlp, debug]
+      processors: [memory_limiter, resource, attributes/database, tail_sampling, batch]
+      exporters: [spanmetrics, otlp/tempo, otlp/jaeger, debug]
     
     metrics/spanmetrics:
       receivers: [spanmetrics]
