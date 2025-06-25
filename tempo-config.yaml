@@ -10,15 +10,8 @@ distributor:
           endpoint: 0.0.0.0:4317
         http:
           endpoint: 0.0.0.0:4318
-    jaeger:
-      protocols:
-        thrift_http:
-          endpoint: 0.0.0.0:14268
-        grpc:
-          endpoint: 0.0.0.0:14250
 
 ingester:
-  max_block_length: 5m
   max_block_bytes: 1_000_000
   complete_block_timeout: 15m
 
@@ -26,7 +19,7 @@ compactor:
   compaction:
     compaction_window: 1h
     max_compaction_objects: 1000000
-    block_retention: 336h  # 14 days
+    block_retention: 336h  # 14일
     compacted_block_retention: 1h
 
 storage:
@@ -44,8 +37,6 @@ querier:
   max_concurrent_queries: 20
   search:
     query_timeout: 5m
-    prefer_self: 10
-    external_endpoints: []
   trace_by_id:
     query_timeout: 1m
 
@@ -54,17 +45,24 @@ query_frontend:
   search:
     concurrent_jobs: 1000
     target_bytes_per_job: 104857600  # 100MB
-    
+
 metrics_generator:
+  registry:
+    external_labels:
+      source: tempo
+      cluster: docker-compose
+  storage:
+    path: /var/tempo/generator/wal
+    remote_write:
+      - url: http://prometheus:9090/api/v1/write
+        send_exemplars: true
   processor:
     service_graphs:
-      enabled: true
       dimensions:
         - db.system
         - db.operation
         - db.name
     span_metrics:
-      enabled: true
       dimensions:
         - service.name
         - span.kind
@@ -74,15 +72,6 @@ metrics_generator:
         - db.name
         - db.sql.table
       histogram_buckets: [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5]
-  storage:
-    path: /var/tempo/generator/wal
-    remote_write:
-      - url: http://prometheus:9090/api/v1/write
-        send_exemplars: true
-
-search:
-  enabled: true
-
 overrides:
   defaults:
     metrics_generator:
