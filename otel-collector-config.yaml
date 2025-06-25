@@ -111,7 +111,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [memory_limiter, resource, attributes/database, tail_sampling, batch]
+      processors: [memory_limiter, resource, attributes/database, batch]
       exporters: [spanmetrics, otlp/tempo, otlp/jaeger, debug]
     
     metrics/spanmetrics:
