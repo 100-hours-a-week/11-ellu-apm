@@ -31,29 +31,29 @@ processors:
         value: "true"
         action: insert
   
-  tail_sampling:
-    decision_wait: 10s
-    num_traces: 50000
-    expected_new_traces_per_sec: 10
-    policies:
-      - name: slow-database-queries
-        type: latency
-        latency:
-          threshold_ms: 1000
-        attributes:
-          - key: db.system
-            values: ["postgresql", "mysql"]
-      - name: database-errors
-        type: status_code
-        status_code:
-          status_codes: [ERROR]
-        attributes:
-          - key: db.system
-            values: ["postgresql", "mysql"]
-      - name: default-sampling
-        type: probabilistic
-        probabilistic:
-          sampling_percentage: 10
+  # tail_sampling:
+  #   decision_wait: 10s
+  #   num_traces: 50000
+  #   expected_new_traces_per_sec: 10
+  #   policies:
+  #     - name: slow-database-queries
+  #       type: latency
+  #       latency:
+  #         threshold_ms: 1000
+  #       attributes:
+  #         - key: db.system
+  #           values: ["postgresql", "mysql"]
+  #     - name: database-errors
+  #       type: status_code
+  #       status_code:
+  #         status_codes: [ERROR]
+  #       attributes:
+  #         - key: db.system
+  #           values: ["postgresql", "mysql"]
+  #     - name: default-sampling
+  #       type: probabilistic
+  #       probabilistic:
+  #         sampling_percentage: 10
 
 connectors:
   spanmetrics:
@@ -127,4 +127,4 @@ service:
     logs:
       receivers: [otlp]
       processors: [memory_limiter, resource, batch]
-      exporters: [loki, debug]
+      exporters: [loki, debug]  
